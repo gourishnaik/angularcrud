@@ -1,0 +1,169 @@
+<div class="container-fluid">
+  <div class="container"><br>
+    <nav class="navbar navbar-expand-lg nav-fill  navbar-light bg-dark">
+      <h4 class="text-light bg-dark py-3" ><marquee direction="left"scrollamount="18"> employee Managaement Timesheet </marquee> </h4> 
+    </nav>     
+    <br><br>
+<form  [formGroup]="employeeform" class="form-container"> 
+<div class="row">
+  <div class="col-md-4">
+     <fieldset>
+  <h1> Time sheet</h1>
+            <hr>
+<!--username-->
+
+<div class ="form-group">
+  <mat-form-field [style.width.px]=290>
+  <mat-label>Enter your username</mat-label>
+  <input matInput  placeholder="enter your username"formControlName="username"name="username"[(ngModel)]="userobj.username" required >
+  <small *ngIf="employeeform.get('username')?.invalid && employeeform.get('username')?.touched" class="text-danger"><br><br><br>username is Required</small> 
+  </mat-form-field>
+  </div>
+  <br>
+  <!----fromdate datepicker-->          
+  <div class ="form-group">
+  <mat-form-field  [style.width.px]=290>
+  <mat-label>From date</mat-label>
+  <input formControlName="fromdate"matInput [min]="minDate" [max]="maxDate" name="fromdate"[matDatepicker]="datepicker"placeholder="From date"[(ngModel)]="userobj.fromdate">
+  <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+  <mat-datepicker #datepicker></mat-datepicker>
+  <small *ngIf="employeeform.get('fromdate')?.invalid && employeeform.get('fromdate')?.touched" class="text-danger"><br><br><br>please specify from date</small>
+  </mat-form-field>
+  <br> <br>
+</div>
+
+<!----Todate datepicker-->  
+<div class ="form-group">
+   <mat-form-field  [style.width.px]=290 >
+    <mat-label>To date</mat-label>
+    <input formControlName="Todate"matInput [min]="minDate" [max]="maxDate" name="Todate"[matDatepicker]="datepicker1"placeholder="To date" [(ngModel)]="userobj.Todate">   
+     <mat-datepicker-toggle matSuffix [for]="datepicker1"></mat-datepicker-toggle>
+    <mat-datepicker #datepicker1></mat-datepicker>
+    <small *ngIf="employeeform.get('Todate')?.invalid && employeeform.get('Todate')?.touched" class="text-danger"><br><br><br>please specify to date</small>
+    </mat-form-field>
+      <br> <br>  
+    </div> 
+      
+  <!----project-->
+<div class ="form-group">
+  <mat-form-field  [style.width.px]=290 >      
+  <mat-label >project Name</mat-label>
+  <mat-select formControlName="projectname"name="projectname"[(ngModel)]="userobj.projectname">
+  <mat-option value ="angular">Angular</mat-option>
+  <mat-option value ="React">React</mat-option>
+  <mat-option value ="javascript">javascript</mat-option>
+  </mat-select>
+  <small *ngIf="employeeform.get('projectname')?.invalid && employeeform.get('projectname')?.touched" class="text-danger"><br><br><br>projectname is Required</small>
+  </mat-form-field>
+  <br><br>
+ </div>
+<!--description-->
+<div class="form-group">
+  <mat-form-field [style.width.px]=290>
+  <mat-label>Description</mat-label>
+  <textarea matInput  formControlName="description" type="text"name="description" placeholder="Description"[(ngModel)]="userobj.description" required ></textarea>
+  <small *ngIf="employeeform.get('description')?.invalid && employeeform.get('description')?.touched" class="text-danger"><br><br><br>description is must Required</small>
+</mat-form-field> <br>
+</div>
+
+
+
+
+
+  <!---no of hours-->
+ <!--from time-->
+ <div class="form-group">
+  <label for="input">From Time</label><br><br>
+  <input [style.width.px]=290 type="time"formControlName="fromtime"name="fromtime" class="form-control"[(ngModel)]="userobj.fromtime" mdbInput required /><br>
+  <small *ngIf="employeeform.get('fromtime')?.invalid && employeeform.get('fromtime')?.touched" class="text-danger">please specify from time</small>
+  </div><br>
+
+
+<!---to time-->
+  <div class="form-group">
+    <label for="input">To Time</label><br><br>
+    <input [style.width.px]=290 type="time" formControlName="totime"name="totime" class="form-control"[(ngModel)]="userobj.totime" mdbInput /><br>
+    <small *ngIf="employeeform.get('totime')?.invalid && employeeform.get('totime')?.touched" class="text-danger">please specify to time</small>
+  </div>
+
+
+<!---buttons-->
+
+   <button (click)="adduser()" *ngIf="!isEdit"[disabled]="employeeform.invalid" class="btn btn-success"
+   >Add</button> &nbsp;
+   <button type ="button"(click)="updateuser()" *ngIf="isEdit"class="btn btn-danger">Update</button>
+      </fieldset>
+    
+<div>
+</div>
+</div>
+		
+<!---right side timesheet list-->
+
+
+<div class="col-md-8">
+  <form role="form">
+
+  
+<fieldset>		
+  <h1>Timesheet list</h1>
+  <hr>
+
+  <div class="content">
+  <mat-label></mat-label>
+  <mat-form-field appearance="standard">
+  <input matInput (keyup)="applyFilter($event)"placeholder="Search"#input>
+</mat-form-field>
+
+<div>
+
+<table class="table" id="users">
+  <thead>
+    <tr>
+      <th scope="col">user name</th>
+      <th scope="col">From date</th>
+      <th scope="col">To date</th>
+      <th scope="col">Project name</th>
+      <th scope="col">Description</th>
+      <th scope="col">from time</th>
+      <th scope="col">To time</th>
+      <th scope="col">Edit</th>
+      <th scope="col">Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+  <tr *ngFor ="let user of alluser">  
+<td>{{user.username}}</td>
+<td>{{user.fromdate| date:'d/M/yy'}}</td>
+<td>{{user.Todate | date:'d/M/yy'}}</td>
+<td>{{user.projectname}}</td>
+<td>{{user.description}}</td>
+<td>{{user.fromtime}}</td>
+<td>{{user.totime}}</td>
+<td><button (click)="edituser(user)"  class="btn btn-info">Edit</button> </td>
+<td><button  (click)="deleteuser(user)"class="btn btn-danger">delete</button></td>
+
+
+  </tr>
+     </tbody>
+    </table>
+  </div>
+  </div>
+     </fieldset>
+    
+
+
+
+
+
+
+
+
+            
+			
+               
+
+
+
+ 
